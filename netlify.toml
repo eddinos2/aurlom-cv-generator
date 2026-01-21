@@ -1,0 +1,46 @@
+[build]
+  command = "npm install"
+  functions = "netlify/functions"
+  publish = "frontend"
+
+# Redirections pour l'API
+[[redirects]]
+  from = "/api/cv/pdf"
+  to = "/.netlify/functions/cv-pdf"
+  status = 200
+  force = true
+
+# Redirection pour l'interface
+[[redirects]]
+  from = "/cv-generator"
+  to = "/cv-generator.html"
+  status = 200
+
+# Servir les fichiers statiques
+[[redirects]]
+  from = "/data/*"
+  to = "/data/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/templates/*"
+  to = "/templates/:splat"
+  status = 200
+
+# Fallback pour SPA si nécessaire
+[[redirects]]
+  from = "/*"
+  to = "/cv-generator.html"
+  status = 200
+
+[functions]
+  # Timeout pour les fonctions (en secondes)
+  # Gratuit: 10s max, Pro: 26s max
+  timeout = 26
+  # Mémoire allouée (en MB)
+  # Gratuit: 1024 MB, Pro: jusqu'à 3008 MB
+  memory = 1024
+
+# Variables d'environnement (optionnel)
+# [build.environment]
+#   NODE_VERSION = "18"
