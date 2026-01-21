@@ -1,7 +1,6 @@
 {
   "version": 2,
   "buildCommand": "npm install",
-  "outputDirectory": "frontend",
   "routes": [
     {
       "src": "/api/cv/pdf",

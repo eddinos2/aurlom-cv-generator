@@ -1,12 +1,10 @@
 // Vercel Serverless Function pour générer un CV en PDF
 // Ce fichier sera automatiquement détecté par Vercel comme une API Route
 
-const { exec } = require('child_process');
-const { promisify } = require('util');
-const fs = require('fs').promises;
-const path = require('path');
+// Utiliser tsx pour charger directement le TypeScript
+require('tsx/cjs/register');
 
-const execAsync = promisify(exec);
+const path = require('path');
 
 module.exports = async (req, res) => {
   // Seulement POST
@@ -26,42 +24,22 @@ module.exports = async (req, res) => {
       });
     }
 
-    // Utiliser /tmp pour les fichiers temporaires (Vercel)
-    const tempDir = '/tmp';
-    const tempFile = path.join(tempDir, `cv-${Date.now()}-${Math.random().toString(36).substring(7)}.json`);
-    const pdfPath = path.join(tempDir, `cv-${Date.now()}-${Math.random().toString(36).substring(7)}.pdf`);
+    // Importer le générateur directement
+    const { CVGenerator } = require(path.join(process.cwd(), 'src/cv/generator.ts'));
+    const { CVSchema } = require(path.join(process.cwd(), 'src/cv/types.ts'));
 
-    // Écrire les données dans un fichier temporaire
-    await fs.writeFile(tempFile, JSON.stringify({ 
-      cvData, 
-      templateName, 
-      outputFormat: 'pdf' 
-    }, null, 2));
+    // Valider les données
+    const validatedCvData = CVSchema.parse(cvData);
 
-    // Appeler le script de génération TypeScript
-    const scriptPath = path.join(process.cwd(), 'src/cv/generate-preview.ts');
-    const { stdout, stderr } = await execAsync(
-      `npx tsx "${scriptPath}" "${tempFile}"`,
-      {
-        cwd: process.cwd(),
-        timeout: 55000, // 55s max (laisser une marge pour Vercel)
-        maxBuffer: 10 * 1024 * 1024, // 10MB
-      }
-    );
+    // Générer le PDF
+    const generator = new CVGenerator();
+    const pdfBuffer = await generator.generate({
+      cvData: validatedCvData,
+      templateName,
+      outputFormat: 'pdf',
+    });
 
-    if (stderr && !stderr.includes('Warning') && !stderr.includes('DeprecationWarning')) {
-      if (stderr.includes('Error') || stderr.includes('ZodError')) {
-        throw new Error(stderr);
-      }
-    }
-
-    // Lire le PDF généré
-    const pdfBuffer = await fs.readFile(pdfPath);
     const generationTime = Date.now() - startTime;
-
-    // Nettoyer les fichiers temporaires
-    await fs.unlink(tempFile).catch(() => {});
-    await fs.unlink(pdfPath).catch(() => {});
 
     // Headers optimisés
     res.setHeader('Content-Type', 'application/pdf');
@@ -80,6 +58,7 @@ module.exports = async (req, res) => {
       success: false,
       error: 'Failed to generate CV PDF',
       message: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
       time: `${generationTime}ms`,
     });
   }
