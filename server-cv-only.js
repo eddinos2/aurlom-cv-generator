@@ -150,13 +150,80 @@ app.get('/api/cv/templates', async (req, res) => {
     
     res.json({
       success: true,
-      data: templates.length > 0 ? templates : ['modern', 'classic', 'montemplate']
+      data: templates.length > 0 ? templates : ['montemplate-v2']
     });
   } catch (error) {
     // Fallback sur les templates par défaut
     res.json({
       success: true,
-      data: ['modern', 'classic', 'montemplate']
+      data: ['montemplate-v2']
+    });
+  }
+});
+
+// Route API optimisée pour génération PDF directe
+app.post('/api/cv/pdf', async (req, res) => {
+  const startTime = Date.now();
+  
+  try {
+    const { cvData, templateName = 'montemplate-v2' } = req.body;
+    
+    if (!cvData) {
+      return res.status(400).json({ 
+        success: false,
+        error: 'cvData is required' 
+      });
+    }
+    
+    // Écrire les données dans un fichier temporaire
+    const tempFile = path.join(__dirname, 'temp-cv-data.json');
+    await fs.writeFile(tempFile, JSON.stringify({ cvData, templateName, outputFormat: 'pdf' }, null, 2));
+    
+    // Appeler le script de génération TypeScript
+    const scriptPath = path.join(__dirname, 'src/cv/generate-preview.ts');
+    const { stdout, stderr } = await execAsync(`npx tsx "${scriptPath}" "${tempFile}"`, {
+      cwd: __dirname,
+      timeout: 60000, // 60s pour PDF
+      maxBuffer: 10 * 1024 * 1024 // 10MB
+    });
+    
+    if (stderr && !stderr.includes('Warning') && !stderr.includes('DeprecationWarning')) {
+      console.error('Stderr:', stderr);
+      if (stderr.includes('Error') || stderr.includes('ZodError')) {
+        throw new Error(stderr);
+      }
+    }
+    
+    // Le script génère un fichier PDF
+    const pdfPath = path.join(__dirname, 'temp-cv-output.pdf');
+    try {
+      const pdfBuffer = await fs.readFile(pdfPath);
+      const generationTime = Date.now() - startTime;
+      
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename="cv-${cvData.personalInfo.firstName}-${cvData.personalInfo.lastName}.pdf"`);
+      res.setHeader('Content-Length', pdfBuffer.length.toString());
+      res.setHeader('X-Generation-Time', `${generationTime}ms`);
+      res.setHeader('Cache-Control', 'private, max-age=300');
+      
+      res.send(pdfBuffer);
+      
+      // Nettoyer
+      fs.unlink(pdfPath).catch(() => {});
+    } catch (fileError) {
+      throw new Error(`PDF file not generated: ${fileError.message}`);
+    }
+    
+    // Nettoyer le fichier temporaire
+    fs.unlink(tempFile).catch(() => {});
+  } catch (error) {
+    const generationTime = Date.now() - startTime;
+    console.error('Erreur génération CV PDF:', error);
+    res.status(500).json({ 
+      success: false,
+      error: 'Failed to generate CV PDF', 
+      message: error.message,
+      time: `${generationTime}ms`
     });
   }
 });

@@ -788,23 +788,49 @@ export class CVGenerator {
   }
 
   /**
-   * Génère un PDF à partir du HTML
+   * Génère un PDF à partir du HTML (optimisé)
    */
   private async generatePDF(html: string, outputPath?: string): Promise<Buffer> {
     const browser = await puppeteer.launch({
       headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage', // Réduit l'utilisation mémoire
+        '--disable-gpu', // Pas besoin de GPU pour PDF
+        '--disable-extensions', // Pas besoin d'extensions
+        '--disable-software-rasterizer',
+        '--disable-background-timer-throttling',
+        '--disable-backgrounding-occluded-windows',
+        '--disable-renderer-backgrounding',
+      ],
     });
 
     try {
       const page = await browser.newPage();
-      await page.setContent(html, { waitUntil: 'networkidle0' });
+      
+      // Optimisations de performance
+      await page.setViewport({ width: 794, height: 1123 }); // A4 en pixels (96 DPI)
+      await page.setContent(html, { 
+        waitUntil: 'domcontentloaded', // Plus rapide que networkidle0
+        timeout: 10000 
+      });
+      
+      // Attendre que les images soient chargées si nécessaire
+      await page.evaluate(() => {
+        return Promise.all(
+          Array.from(document.images)
+            .filter(img => !img.complete)
+            .map(img => new Promise((resolve) => {
+              img.onload = img.onerror = resolve;
+            }))
+        );
+      });
       
       // S'assurer que les liens restent cliquables dans le PDF
       await page.evaluate(() => {
         const links = document.querySelectorAll('a');
         links.forEach(link => {
-          // Garder les liens cliquables
           link.style.pointerEvents = 'auto';
         });
       });
