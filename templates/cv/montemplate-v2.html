@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CV – {{personalInfo.fullName}}</title>
+
+  <!-- Font proche -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --ink:#111;
+      --muted:#5a5a5a;
+      --blue:#2b66d9;
+      --pink:#e6007a;
+      --hl:#fff2cc;
+      --line:#cfcfcf;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      background:#f3f4f6;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--ink);
+    }
+
+    /* Feuille A4 */
+    .page{
+      width: 210mm;
+      min-height: 297mm;
+      margin: 16px auto;
+      background:#fff;
+      padding: 14mm 16mm 42mm 16mm;
+      box-shadow: 0 8px 24px rgba(0,0,0,.12);
+      position: relative;
+    }
+
+    /* Helpers */
+    .hl{ background: transparent; padding: 2px 6px; border-radius: 2px; }
+    .muted{ color:var(--muted); }
+    .dot{ padding:0 8px; color:#000; }
+    a.fake-link{ color:var(--pink); text-decoration: none; }
+    .editable[contenteditable="true"]{ outline: none; }
+    .editable[contenteditable="true"]:focus{
+      box-shadow: 0 0 0 2px rgba(43,102,217,.18);
+      border-radius: 4px;
+    }
+
+    /* Header */
+    .header{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 14px;
+      margin-bottom: 8px;
+    }
+    .h-left{
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .h-name{
+      font-size: 28px;
+      line-height: 1.05;
+      margin: 0 0 6px 0;
+      font-weight: 700;
+      letter-spacing: .2px;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      hyphens: auto;
+      max-width: 100%;
+    }
+    /* Adaptation automatique pour noms très longs - réduire la taille mais garder le nom complet */
+    .h-name.long-name{
+      font-size: 22px;
+      line-height: 1.1;
+    }
+    .h-name.very-long-name{
+      font-size: 18px;
+      line-height: 1.15;
+    }
+    /* Pour les noms extrêmement longs, réduire encore plus */
+    .h-name.extremely-long-name{
+      font-size: 16px;
+      line-height: 1.2;
+    }
+    .h-name .last{ font-weight: 800; }
+    .h-name .fake-link{
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .qr-container{
+      display: inline-block;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    .qr-container img{
+      width: 50px;
+      height: 50px;
+      display: block;
+    }
+    .h-sub{
+      margin: 0 0 8px 0;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+    .h-meta{
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.55;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    .h-meta .line{ 
+      display:block; 
+      margin: 2px 0;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    .h-meta .contact-line{
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .h-meta .contact-line .dot{
+      padding: 0 4px;
+    }
+
+    .h-photo{
+      flex: 0 0 100px;
+      width: 100px;
+      height: 100px;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #eee;
+      border: 0;
+    }
+    .h-photo img{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
+    }
+
+    /* Pitch box */
+    .pitch{
+      margin-top: 10px;
+      border-radius: 4px;
+      background: #efefef;
+      padding: 10px 12px;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    /* Sections */
+    .section{
+      margin-top: 7px;
+      page-break-inside: avoid;
+      margin-bottom: 3px;
+    }
+    .section-title{
+      display:inline-block;
+      color: var(--blue);
+      font-weight: 600;
+      font-size: 15px;
+      padding: 2px 6px;
+      background: transparent;
+      border-radius: 2px;
+      margin: 4px 0 6px 0;
+    }
+
+    /* Timeline blocks (Formation + Expériences) */
+    .rows{
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      margin-top: 4px;
+      padding-left: 6px;
+    }
+    .row{
+      display:grid;
+      grid-template-columns: 90px 1fr;
+      column-gap: 12px;
+      align-items:start;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .row:last-child{
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .row .col-year{
+      font-size: 13px;
+      font-weight: 500;
+      color:#000;
+      white-space: nowrap;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding-top: 2px;
+    }
+    .row .col-year .year-value{
+      display: block;
+      line-height: 1.2;
+    }
+    .row .col-year .duration-value{
+      font-size: 11px;
+      font-style: italic;
+      color: var(--muted);
+      line-height: 1.2;
+    }
+    .row .col-dur{
+      display: none; /* Masqué car maintenant dans col-year */
+    }
+    .row .col-main{
+      min-width:0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .row .titleline{
+      font-size: 14px;
+      line-height: 1.4;
+      font-weight: 600;
+      margin-bottom: 2px;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      hyphens: auto;
+    }
+    .row .titleline .thin{
+      font-weight: 500;
+      color:#000;
+    }
+    .row .desc{
+      font-size: 12.5px;
+      line-height: 1.5;
+      color:#1a1a1a;
+      margin-top: 0;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      hyphens: auto;
+      max-width: 100%;
+    }
+    .row .desc #education-field,
+    .row .desc #education-gpa{
+      display: block;
+      margin-top: 2px;
+    }
+    .row .desc #education-field:not(:empty)::after{
+      content: ' ';
+    }
+
+    /* Two/three columns area */
+    .skills{
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px 14px;
+      margin-top: 4px;
+      margin-left: 6px;
+      font-size: 12.5px;
+      line-height: 1.45;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    .skills b{ font-weight: 600; }
+    .skills > div{
+      min-width: 0;
+      overflow: hidden;
+      word-wrap: break-word;
+    }
+    .hash{
+      color:#000;
+      font-style: italic;
+      margin-top: 2px;
+      font-size: 12px;
+    }
+
+    /* Extra activities */
+    .extras{
+      font-size: 12.5px;
+      line-height: 1.45;
+      margin-top: 4px;
+      margin-left: 6px;
+      page-break-inside: avoid;
+    }
+    
+    /* Certifications et Projets - éviter le chevauchement avec footer */
+    #certifications-title,
+    #projects-title {
+      margin-top: 4px;
+    }
+    
+    /* S'assurer que le contenu ne dépasse pas dans le footer */
+    .section:has(#projects-title),
+    .section:has(#certifications-title) {
+      margin-bottom: 3px;
+      padding-bottom: 0;
+    }
+
+    /* Footer */
+    .footer{
+      position:absolute;
+      left: 16mm;
+      right: 16mm;
+      bottom: 8mm;
+      padding-top: 8px;
+      border-top: 1px solid var(--line);
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 20px;
+    }
+    .footer .txt{
+      font-size: 9.5px;
+      line-height: 1.4;
+      color:#3b3b3b;
+      flex: 1;
+      max-width: 72%;
+    }
+    .footer .brand{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-end;
+      justify-content:flex-start;
+      min-width: 130px;
+      text-align: right;
+    }
+    .footer .brand img{
+      max-height: 35px;
+      width: auto;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .footer .brand strong{
+      font-size: 20px;
+      font-weight: 700;
+      color: #1a4480;
+      letter-spacing: 0.8px;
+      margin-bottom: 3px;
+      display: block;
+      line-height: 1.1;
+    }
+    .footer .brand small{
+      font-size: 9px;
+      color: #666;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      display: block;
+      line-height: 1.2;
+    }
+
+    /* Print */
+    @media print{
+      body{ background:#fff; }
+      .page{
+        margin:0;
+        box-shadow:none;
+        width:auto;
+        min-height:auto;
+        padding-bottom: 40mm;
+      }
+      .footer{
+        position: fixed;
+        bottom: 6mm;
+      }
+      .editable[contenteditable="true"]:focus{ box-shadow:none; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+
+    <!-- HEADER -->
+    <section class="header">
+      <div class="h-left">
+        <h1 class="h-name">
+          <span>{{personalInfo.firstName}}</span> <span class="last">{{personalInfo.lastName}}</span>
+          <span class="dot">•</span>
+          <a class="fake-link" href="{{personalInfo.website}}" id="discover-link">Découvrez-moi en 30 sec.</a>
+          <span class="qr-container" id="qr-container"></span>
+        </h1>
+
+        <p class="h-meta">
+          <span class="line"><span class="hl">Né le {{personalInfo.dateOfBirth}} <span id="birth-place"></span></span></span>
+          <span class="line"><span class="hl">{{personalInfo.fullAddress}}</span></span>
+          <span class="line contact-line">
+            <span class="hl">Tel. {{personalInfo.phone}}</span><span class="dot">•</span><span class="hl">Mail. {{personalInfo.email}}</span><span id="license-display" class="dot">•</span><span id="license-text" class="hl"></span><span id="vehicle-display" class="dot">•</span><span id="vehicle-text" class="hl"></span>
+          </span>
+        </p>
+      </div>
+
+      <div class="h-photo" id="photo-container">
+        <img src="{{personalInfo.image}}" alt="Photo de profil" id="profile-photo" />
+      </div>
+    </section>
+
+    <!-- PITCH -->
+    <section class="pitch">
+      {{summary}}
+    </section>
+
+    <!-- FORMATION -->
+    <section class="section">
+      <div class="section-title">Formation académique</div>
+
+      <div class="rows">
+        <!-- START education -->
+        <div class="row">
+          <div class="col-year">{{education.dateRange}}</div>
+          <div class="col-dur"></div>
+          <div class="col-main">
+            <div class="titleline">
+              <span class="hl">{{education.degree}}</span> <span class="thin">•</span> <span class="hl">{{education.institution}}</span> <span class="thin">•</span> <span class="muted"><i>{{education.location}}</i></span>
+            </div>
+            <div class="desc" id="education-details">
+              <div id="education-field">{{education.field}}</div>
+              <div id="education-gpa">{{education.gpa}}</div>
+            </div>
+          </div>
+        </div>
+        <!-- END education -->
+      </div>
+    </section>
+
+    <!-- EXPERIENCES -->
+    <section class="section">
+      <div class="section-title">Expériences</div>
+
+      <div class="rows">
+        <!-- START experience -->
+        <div class="row">
+          <div class="col-year">
+            <span class="year-value">{{experience.startDate}}</span>
+            <span class="duration-value">{{experience.endDate}}</span>
+          </div>
+          <div class="col-dur"></div>
+          <div class="col-main">
+            <div class="titleline">
+              <span class="hl">{{experience.company}}</span> <span class="thin">•</span>
+              <span class="hl">{{experience.position}}</span>
+              <span id="experience-contract" class="thin">•</span>
+              <span id="experience-contract-text" class="hl"></span>
+              <span class="thin">•</span>
+              <span class="muted"><i>{{experience.location}}</i></span>
+            </div>
+            <div class="desc">
+              {{experience.description}}
+              <div id="experience-achievements">{{experience.achievements}}</div>
+            </div>
+          </div>
+        </div>
+        <!-- END experience -->
+      </div>
+    </section>
+
+    <!-- SKILLS / VALUES -->
+    <section class="section">
+      <div class="section-title">Langues, logiciels, qualités et valeurs</div>
+
+      <div class="skills" id="skills-container">
+        <div id="skills-col1">
+          <!-- Les langues et compétences seront injectées ici -->
+        </div>
+
+        <div id="skills-col2">
+          <!-- Les langues et compétences seront injectées ici -->
+        </div>
+
+        <div id="skills-col3">
+          <!-- Les compétences et valeurs seront injectées ici -->
+        </div>
+      </div>
+    </section>
+
+    <!-- EXTRAS -->
+    <section class="section">
+      <div class="section-title">Activités extra-scolaires</div>
+      <div class="extras" id="hobbies-section">
+        <em id="hobbies-list">{{hobbies}}</em>
+      </div>
+    </section>
+
+    <!-- Certifications (si présentes) -->
+    <!-- START certifications -->
+    <section class="section">
+      <div class="section-title" id="certifications-title">Certifications</div>
+      <div class="extras">
+        <b>{{certifications.name}}</b> - {{certifications.issuer}} ({{certifications.date}})
+      </div>
+    </section>
+    <!-- END certifications -->
+
+    <!-- Projets (si présents) -->
+    <!-- START projects -->
+    <section class="section">
+      <div class="section-title" id="projects-title">Projets</div>
+      <div class="extras">
+        <b>{{projects.name}}</b> - {{projects.description}}<br/>
+        Technologies : {{projects.technologies}}
+      </div>
+    </section>
+    <!-- END projects -->
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="txt">
+        <strong>Aurlom BTS+</strong> est le premier BTS de France. Plus de 3 000 étudiants préparés sur 32 filières de BTS à Paris, Boulogne, Nice et Lille. Plus de 1 800 entreprises partenaires.<br/>
+        Contact : 01 40 41 12 38 • info@aurlom.com • Siège : 167 rue de Courcelles 75017 Paris.
+      </div>
+
+      <div class="brand">
+        <img src="{{aurlomLogo}}" alt="Aurlom BTS+" id="aurlom-logo" />
+        <small>LE CHOIX DU SUCCÈS</small>
+      </div>
+    </footer>
+
+  </main>
+</body>
+</html>

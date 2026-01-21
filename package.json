@@ -1,0 +1,50 @@
+{
+  "name": "admiss-flow-backend",
+  "version": "1.0.0",
+  "description": "Backend API pour Admiss-Flow - Intégrations HubSpot, Meta, DocuSeal",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "dev:cv": "node server-cv-only.js",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "migrate": "tsx src/db/migrate.ts",
+    "test": "jest",
+    "cv:generate": "tsx src/cv/test-generator.ts"
+  },
+  "keywords": [
+    "admission",
+    "hubspot",
+    "docuseal",
+    "meta",
+    "api"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@hubspot/api-client": "^9.0.0",
+    "@types/qrcode": "^1.5.6",
+    "axios": "^1.6.2",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "mammoth": "^1.11.0",
+    "pg": "^8.11.3",
+    "puppeteer": "^21.6.0",
+    "qrcode": "^1.5.4",
+    "winston": "^3.11.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/node": "^20.10.5",
+    "@types/pg": "^8.10.9",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  }
+}

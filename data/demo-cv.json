@@ -1,0 +1,162 @@
+{
+  "personalInfo": {
+    "firstName": "Houssam",
+    "lastName": "SAYAD",
+    "email": "houssam@aurlom.com",
+    "phone": "+33 7 77 77 77 77",
+    "address": "45 Avenue des Champs-Élysées",
+    "city": "Paris",
+    "postalCode": "75008",
+    "country": "France",
+    "dateOfBirth": "18 juin 2006",
+    "linkedin": "https://linkedin.com/in/aurlom",
+    "website": "",
+    "image": "https://media.tenor.com/yiLa6Us0-tMAAAAe/cat-nerd.png",
+    "drivingLicense": "Permis B",
+    "hasVehicle": true,
+    "btsProgram": "Biologie Médicale",
+    "startYear": 2026,
+    "alternanceDetails": {
+      "domaine": "laboratoire",
+      "activites": "préparation et traitement des échantillons, prélèvements selon protocole, participation aux analyses, traçabilité, hygiène-sécurité et contrôle qualité",
+      "disponibilite": "Disponible 3 jours en structure, 2 jours à l'école et à temps plein pendant les vacances",
+      "qualites": "la rigueur, la fiabilité, l'implication et le sens des responsabilités"
+    }
+  },
+  "experience": [
+    {
+      "company": "McDonald's",
+      "position": "Équipier polyvalent",
+      "location": "Bonneuil-sur-Marne (93)",
+      "startDate": "2026-01",
+      "endDate": "2026-02",
+      "current": false,
+      "description": "Accueil clientèle, préparation en cuisine, gestion des commandes et maintien d'un service rapide dans un environnement à forte affluence.",
+      "achievements": []
+    },
+    {
+      "company": "Aide aux devoirs",
+      "position": "Tuteur scolaire",
+      "location": "Paris (75)",
+      "startDate": "2025-09",
+      "endDate": "2025-12",
+      "current": true,
+      "description": "Accompagnement d'élèves du primaire et du collège : explication des leçons, aide aux exercices et suivi méthodologique.",
+      "achievements": []
+    },
+    {
+      "company": "Librairie Cultura",
+      "position": "Employé polyvalent",
+      "location": "Créteil (94)",
+      "startDate": "2024-07",
+      "endDate": "2024-08",
+      "current": false,
+      "description": "Accueil des clients, conseil personnalisé, mise en rayon, étiquetage et tenue de la réserve. Animations culturelles et maintien d'un espace de vente organisé et attractif.",
+      "achievements": []
+    },
+    {
+      "company": "Laboratoire d'Analyses Médicales",
+      "position": "Stagiaire",
+      "location": "Paris, France",
+      "startDate": "2024-06",
+      "endDate": "2024-07",
+      "current": false,
+      "description": "Stage d'observation en laboratoire d'analyses médicales.",
+      "achievements": [
+        "Observation des techniques de prélèvement",
+        "Découverte des procédures de contrôle qualité",
+        "Initiation aux règles d'hygiène et de sécurité"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Lycée Pasteur",
+      "degree": "Baccalauréat Général",
+      "field": "Sciences de la Vie et de la Terre",
+      "location": "Paris, France",
+      "startDate": "2021-09",
+      "endDate": "2024-06",
+      "current": false,
+      "gpa": "Mention Bien"
+    }
+  ],
+  "skills": [
+    {
+      "name": "vente",
+      "level": "intermediate",
+      "category": "Compétences"
+    },
+    {
+      "name": "relation client",
+      "level": "intermediate",
+      "category": "Compétences"
+    },
+    {
+      "name": "merchandising",
+      "level": "beginner",
+      "category": "Compétences"
+    },
+    {
+      "name": "Rigoureux",
+      "level": "advanced",
+      "category": "Qualités"
+    },
+    {
+      "name": "ponctuel",
+      "level": "advanced",
+      "category": "Qualités"
+    },
+    {
+      "name": "fiable",
+      "level": "advanced",
+      "category": "Qualités"
+    },
+    {
+      "name": "Amitié",
+      "level": "advanced",
+      "category": "Valeurs"
+    },
+    {
+      "name": "responsabilité",
+      "level": "advanced",
+      "category": "Valeurs"
+    },
+    {
+      "name": "curiosité",
+      "level": "advanced",
+      "category": "Valeurs"
+    }
+  ],
+  "languages": [
+    {
+      "name": "Anglais",
+      "level": "intermediate"
+    },
+    {
+      "name": "Espagnol",
+      "level": "beginner"
+    },
+    {
+      "name": "Allemand",
+      "level": "scolaire"
+    }
+  ],
+  "software": [
+    {
+      "name": "Canva",
+      "level": "professionnel"
+    },
+    {
+      "name": "Suite Google",
+      "level": "beginner"
+    }
+  ],
+  "certifications": [],
+  "projects": [],
+  "hobbies": [
+    "Sciences : lecture d'articles scientifiques",
+    "Sport : natation",
+    "Bénévolat : aide aux devoirs"
+  ]
+}

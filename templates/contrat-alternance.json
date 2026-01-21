@@ -1,0 +1,65 @@
+{
+  "name": "Contrat d'Alternance Aurlom BTS+",
+  "description": "Template de contrat d'alternance pour les étudiants admis",
+  "fields": [
+    {
+      "name": "Prénom",
+      "type": "text",
+      "required": true,
+      "placeholder": "Prénom de l'étudiant"
+    },
+    {
+      "name": "Nom",
+      "type": "text",
+      "required": true,
+      "placeholder": "Nom de l'étudiant"
+    },
+    {
+      "name": "Email",
+      "type": "email",
+      "required": true,
+      "placeholder": "email@example.com"
+    },
+    {
+      "name": "Téléphone",
+      "type": "text",
+      "required": false,
+      "placeholder": "06 12 34 56 78"
+    },
+    {
+      "name": "Programme",
+      "type": "text",
+      "required": true,
+      "placeholder": "BTS MCO, BTS NDRC, etc."
+    },
+    {
+      "name": "Campus",
+      "type": "text",
+      "required": true,
+      "placeholder": "Paris 17, Lyon, Marseille"
+    },
+    {
+      "name": "Date de début",
+      "type": "date",
+      "required": true
+    },
+    {
+      "name": "Date de fin",
+      "type": "date",
+      "required": true
+    },
+    {
+      "name": "Entreprise",
+      "type": "text",
+      "required": true,
+      "placeholder": "Nom de l'entreprise"
+    },
+    {
+      "name": "Rémunération",
+      "type": "text",
+      "required": true,
+      "placeholder": "Montant de la rémunération"
+    }
+  ],
+  "instructions": "Ce template sera utilisé pour générer automatiquement les contrats d'alternance lorsque le statut d'un candidat passe à 'Admis'."
+}

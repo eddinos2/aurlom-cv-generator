@@ -1,0 +1,135 @@
+{
+  "scenarios": [
+    {
+      "name": "Lead Meta → HubSpot → Dashboard",
+      "description": "Capture automatique des leads Meta Ads, création dans HubSpot et synchronisation avec le Dashboard",
+      "trigger": {
+        "app": "Webhooks by Zapier",
+        "event": "Catch Hook",
+        "webhook_url": "{{ZAPIER_WEBHOOK_URL}}/meta-lead",
+        "method": "POST"
+      },
+      "actions": [
+        {
+          "app": "HubSpot",
+          "action": "Create Contact",
+          "fields": {
+            "Email": "{{trigger.email}}",
+            "First Name": "{{trigger.firstName}}",
+            "Last Name": "{{trigger.lastName}}",
+            "Phone": "{{trigger.phone}}",
+            "Lead Source": "Meta Ad",
+            "Admiss Flow Status": "Nouveau"
+          }
+        },
+        {
+          "app": "Webhooks by Zapier",
+          "action": "POST",
+          "url": "{{API_BASE_URL}}/api/webhooks/meta",
+          "method": "POST",
+          "data": "{{trigger}}"
+        },
+        {
+          "app": "Email",
+          "action": "Send Outbound Email",
+          "to": "{{TEAM_EMAIL}}",
+          "subject": "Nouveau lead Meta Ads",
+          "body": "Un nouveau lead a été capturé depuis Meta Ads:\n\n{{trigger}}"
+        }
+      ]
+    },
+    {
+      "name": "Statut changé → Synchronisation",
+      "description": "Synchroniser les changements de statut entre HubSpot et Dashboard",
+      "trigger": {
+        "app": "HubSpot",
+        "event": "Contact Property Changed",
+        "property": "admiss_flow_status"
+      },
+      "actions": [
+        {
+          "app": "Webhooks by Zapier",
+          "action": "POST",
+          "url": "{{API_BASE_URL}}/api/candidates/{{trigger.contactId}}/status",
+          "method": "PUT",
+          "headers": {
+            "Authorization": "Bearer {{JWT_TOKEN}}"
+          },
+          "data": {
+            "status": "{{trigger.newValue}}",
+            "notes": "Synchronisé depuis HubSpot"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admission → Génération contrat",
+      "description": "Générer automatiquement un contrat DocuSeal quand un candidat est admis",
+      "trigger": {
+        "app": "Webhooks by Zapier",
+        "event": "Catch Hook",
+        "webhook_url": "{{ZAPIER_WEBHOOK_URL}}/admission",
+        "method": "POST"
+      },
+      "actions": [
+        {
+          "app": "Webhooks by Zapier",
+          "action": "POST",
+          "url": "{{API_BASE_URL}}/api/documents/generate",
+          "method": "POST",
+          "headers": {
+            "Authorization": "Bearer {{JWT_TOKEN}}"
+          },
+          "data": {
+            "candidate_id": "{{trigger.candidateId}}",
+            "document_type": "contrat_alternance",
+            "template_id": "{{DOCUSEAL_TEMPLATE_CONTRAT_ALTERNANCE}}"
+          }
+        },
+        {
+          "app": "HubSpot",
+          "action": "Update Deal",
+          "dealId": "{{trigger.dealId}}",
+          "fields": {
+            "Admiss Flow Status": "Contrat en cours"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Contrat signé → Finalisation",
+      "description": "Finaliser le processus quand un contrat DocuSeal est signé",
+      "trigger": {
+        "app": "Webhooks by Zapier",
+        "event": "Catch Hook",
+        "webhook_url": "{{ZAPIER_WEBHOOK_URL}}/docuseal-signed",
+        "method": "POST"
+      },
+      "actions": [
+        {
+          "app": "HubSpot",
+          "action": "Update Deal",
+          "dealId": "{{trigger.dealId}}",
+          "fields": {
+            "Admiss Flow Status": "Contrat signé",
+            "Deal Stage": "closedwon"
+          }
+        },
+        {
+          "app": "Email",
+          "action": "Send Outbound Email",
+          "to": "{{ADMIN_ALTERNANCE_EMAIL}}",
+          "subject": "Contrat signé - {{trigger.candidateName}}",
+          "body": "Le contrat d'alternance a été signé pour {{trigger.candidateName}}.\n\nDocument: {{trigger.documentUrl}}"
+        }
+      ]
+    }
+  ],
+  "setup_instructions": {
+    "step1": "Créer un compte Zapier et installer les apps nécessaires",
+    "step2": "Configurer les webhooks avec les URLs de votre API",
+    "step3": "Ajouter les tokens d'authentification dans les variables Zapier",
+    "step4": "Tester chaque scénario avec des données de test",
+    "step5": "Activer les scénarios en production"
+  }
+}

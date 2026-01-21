@@ -1,0 +1,91 @@
+{
+  "personalInfo": {
+    "firstName": "Sophie",
+    "lastName": "Martin",
+    "email": "sophie.martin@email.com",
+    "phone": "+33 6 12 34 56 78",
+    "address": "45 Avenue des Champs-Élysées",
+    "city": "Paris",
+    "postalCode": "75008",
+    "country": "France",
+    "dateOfBirth": "18 juin 2004",
+    "linkedin": "https://linkedin.com/in/sophie-martin",
+    "website": "",
+    "image": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
+    "btsProgram": "Biologie Médicale",
+    "startYear": 2026,
+    "alternanceDetails": {
+      "domaine": "laboratoire",
+      "activites": "préparation et traitement des échantillons, prélèvements selon protocole, participation aux analyses, traçabilité, hygiène-sécurité et contrôle qualité",
+      "disponibilite": "Disponible 3 jours en structure, 2 jours à l'école et à temps plein pendant les vacances",
+      "qualites": "la rigueur, la fiabilité, l'implication et le sens des responsabilités"
+    }
+  },
+  "experience": [
+    {
+      "company": "Laboratoire d'Analyses Médicales",
+      "position": "Stagiaire",
+      "location": "Paris, France",
+      "startDate": "2024-07",
+      "endDate": "2024-08",
+      "current": false,
+      "description": "Stage d'observation en laboratoire d'analyses médicales.",
+      "achievements": [
+        "Observation des techniques de prélèvement",
+        "Découverte des procédures de contrôle qualité",
+        "Initiation aux règles d'hygiène et de sécurité"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Lycée Pasteur",
+      "degree": "Baccalauréat Général",
+      "field": "Sciences de la Vie et de la Terre",
+      "location": "Paris, France",
+      "startDate": "2021-09",
+      "endDate": "2024-06",
+      "current": false,
+      "gpa": "Mention Bien"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Rigueur",
+      "level": "advanced",
+      "category": "Qualités"
+    },
+    {
+      "name": "Fiabilité",
+      "level": "advanced",
+      "category": "Qualités"
+    },
+    {
+      "name": "Sens des responsabilités",
+      "level": "advanced",
+      "category": "Qualités"
+    },
+    {
+      "name": "Travail d'équipe",
+      "level": "advanced",
+      "category": "Qualités"
+    }
+  ],
+  "languages": [
+    {
+      "name": "Français",
+      "level": "native"
+    },
+    {
+      "name": "Anglais",
+      "level": "B2"
+    }
+  ],
+  "certifications": [],
+  "projects": [],
+  "hobbies": [
+    "Sciences : lecture d'articles scientifiques",
+    "Sport : natation",
+    "Bénévolat : aide aux devoirs"
+  ]
+}

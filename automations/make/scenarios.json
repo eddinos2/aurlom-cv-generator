@@ -1,0 +1,149 @@
+{
+  "scenarios": [
+    {
+      "name": "Lead Meta → HubSpot → Dashboard",
+      "description": "Capture automatique des leads Meta Ads, création dans HubSpot et synchronisation avec le Dashboard",
+      "modules": [
+        {
+          "type": "trigger",
+          "app": "Webhooks",
+          "event": "Custom webhook",
+          "webhook_url": "{{MAKE_WEBHOOK_URL}}/meta-lead",
+          "method": "POST"
+        },
+        {
+          "type": "action",
+          "app": "HubSpot",
+          "action": "Create a contact",
+          "fields": {
+            "email": "{{1.email}}",
+            "firstname": "{{1.firstName}}",
+            "lastname": "{{1.lastName}}",
+            "phone": "{{1.phone}}",
+            "admiss_source": "Meta Ad",
+            "admiss_flow_status": "Nouveau"
+          }
+        },
+        {
+          "type": "action",
+          "app": "HTTP",
+          "action": "Make a request",
+          "url": "{{API_BASE_URL}}/api/webhooks/meta",
+          "method": "POST",
+          "body": "{{1}}"
+        },
+        {
+          "type": "action",
+          "app": "Email",
+          "action": "Send an email",
+          "to": "{{TEAM_EMAIL}}",
+          "subject": "Nouveau lead Meta Ads",
+          "body": "Un nouveau lead a été capturé depuis Meta Ads:\n\n{{1}}"
+        }
+      ]
+    },
+    {
+      "name": "Statut changé → Synchronisation",
+      "description": "Synchroniser les changements de statut entre HubSpot et Dashboard",
+      "modules": [
+        {
+          "type": "trigger",
+          "app": "HubSpot",
+          "event": "Contact updated",
+          "filters": {
+            "property": "admiss_flow_status"
+          }
+        },
+        {
+          "type": "action",
+          "app": "HTTP",
+          "action": "Make a request",
+          "url": "{{API_BASE_URL}}/api/candidates/{{1.contactId}}/status",
+          "method": "PUT",
+          "headers": {
+            "Authorization": "Bearer {{JWT_TOKEN}}"
+          },
+          "body": {
+            "status": "{{1.newValue}}",
+            "notes": "Synchronisé depuis HubSpot"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admission → Génération contrat",
+      "description": "Générer automatiquement un contrat DocuSeal quand un candidat est admis",
+      "modules": [
+        {
+          "type": "trigger",
+          "app": "Webhooks",
+          "event": "Custom webhook",
+          "webhook_url": "{{MAKE_WEBHOOK_URL}}/admission",
+          "method": "POST"
+        },
+        {
+          "type": "action",
+          "app": "HTTP",
+          "action": "Make a request",
+          "url": "{{API_BASE_URL}}/api/documents/generate",
+          "method": "POST",
+          "headers": {
+            "Authorization": "Bearer {{JWT_TOKEN}}"
+          },
+          "body": {
+            "candidate_id": "{{1.candidateId}}",
+            "document_type": "contrat_alternance",
+            "template_id": "{{DOCUSEAL_TEMPLATE_CONTRAT_ALTERNANCE}}"
+          }
+        },
+        {
+          "type": "action",
+          "app": "HubSpot",
+          "action": "Update a deal",
+          "dealId": "{{1.dealId}}",
+          "fields": {
+            "admiss_flow_status": "Contrat en cours"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Contrat signé → Finalisation",
+      "description": "Finaliser le processus quand un contrat DocuSeal est signé",
+      "modules": [
+        {
+          "type": "trigger",
+          "app": "Webhooks",
+          "event": "Custom webhook",
+          "webhook_url": "{{MAKE_WEBHOOK_URL}}/docuseal-signed",
+          "method": "POST"
+        },
+        {
+          "type": "action",
+          "app": "HubSpot",
+          "action": "Update a deal",
+          "dealId": "{{1.dealId}}",
+          "fields": {
+            "admiss_flow_status": "Contrat signé",
+            "dealstage": "closedwon"
+          }
+        },
+        {
+          "type": "action",
+          "app": "Email",
+          "action": "Send an email",
+          "to": "{{ADMIN_ALTERNANCE_EMAIL}}",
+          "subject": "Contrat signé - {{1.candidateName}}",
+          "body": "Le contrat d'alternance a été signé pour {{1.candidateName}}.\n\nDocument: {{1.documentUrl}}"
+        }
+      ]
+    }
+  ],
+  "setup_instructions": {
+    "step1": "Créer un compte Make et installer les apps nécessaires",
+    "step2": "Configurer les webhooks avec les URLs de votre API",
+    "step3": "Ajouter les tokens d'authentification dans les variables Make",
+    "step4": "Tester chaque scénario avec des données de test",
+    "step5": "Activer les scénarios en production"
+  }
+}

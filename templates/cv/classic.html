@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV - {{personalInfo.firstName}} {{personalInfo.lastName}}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Times New Roman', serif;
+            color: #000;
+            line-height: 1.5;
+            background: #fff;
+        }
+
+        .container {
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 25px;
+            background: #fff;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #000;
+        }
+
+        .profile-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #000;
+            margin: 0 auto 15px;
+            display: block;
+        }
+
+        .name {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .contact-info {
+            font-size: 11px;
+            line-height: 1.8;
+        }
+
+        .contact-item {
+            margin: 2px 0;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #000;
+            padding-bottom: 3px;
+        }
+
+        .summary {
+            font-size: 12px;
+            line-height: 1.6;
+            text-align: justify;
+        }
+
+        .experience-item,
+        .education-item {
+            margin-bottom: 15px;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .item-title {
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .item-company {
+            font-size: 12px;
+            font-style: italic;
+        }
+
+        .item-date {
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+        .item-location {
+            font-size: 11px;
+            font-style: italic;
+        }
+
+        .item-description {
+            font-size: 11px;
+            margin-top: 5px;
+            line-height: 1.5;
+        }
+
+        .item-achievements {
+            font-size: 11px;
+            margin-top: 5px;
+            padding-left: 15px;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .skill-item {
+            font-size: 11px;
+            padding: 3px 8px;
+            border: 1px solid #000;
+        }
+
+        .languages-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .language-item {
+            font-size: 11px;
+        }
+
+        .certifications-list {
+            margin-left: 15px;
+        }
+
+        .certification-item {
+            margin-bottom: 8px;
+            font-size: 11px;
+        }
+
+        .cert-name {
+            font-weight: bold;
+        }
+
+        .cert-issuer {
+            font-size: 10px;
+            font-style: italic;
+        }
+
+        .projects-list {
+            margin-left: 15px;
+        }
+
+        .project-item {
+            margin-bottom: 10px;
+            font-size: 11px;
+        }
+
+        .project-name {
+            font-weight: bold;
+        }
+
+        .project-description {
+            margin-top: 3px;
+        }
+
+        .project-tech {
+            font-size: 10px;
+            font-style: italic;
+            margin-top: 2px;
+        }
+
+        .hobbies {
+            font-size: 11px;
+        }
+
+        .references-list {
+            margin-left: 15px;
+        }
+
+        .reference-item {
+            margin-bottom: 8px;
+            font-size: 11px;
+        }
+
+        .ref-name {
+            font-weight: bold;
+        }
+
+        .ref-position {
+            font-size: 10px;
+            font-style: italic;
+        }
+
+        @media print {
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div id="profile-image-container"></div>
+            <h1 class="name">{{personalInfo.firstName}} {{personalInfo.lastName}}</h1>
+            <div class="contact-info">
+                <div id="email-item"></div>
+                <div id="phone-item"></div>
+                <div id="address-item"></div>
+                <div id="linkedin-item"></div>
+                <div id="website-item"></div>
+            </div>
+        </div>
+
+        <!-- Résumé -->
+        <div class="section" id="summary-section">
+            <h2 class="section-title">Profil Professionnel</h2>
+            <p class="summary">{{summary}}</p>
+        </div>
+
+        <!-- Expérience professionnelle -->
+        <!-- START experience -->
+        <div class="section" id="experience-section">
+            <h2 class="section-title">Expérience Professionnelle</h2>
+            <div class="experience-item">
+                <div class="item-header">
+                    <div>
+                        <div class="item-title">{{experience.position}}</div>
+                        <div class="item-company">{{experience.company}}</div>
+                        <div class="item-location" id="experience-location">{{experience.location}}</div>
+                    </div>
+                    <div class="item-date">{{experience.startDate}} - {{experience.endDate}}</div>
+                </div>
+                <div class="item-description" id="experience-description">{{experience.description}}</div>
+                <div class="item-achievements" id="experience-achievements">{{experience.achievements}}</div>
+            </div>
+        </div>
+        <!-- END experience -->
+
+        <!-- Éducation -->
+        <!-- START education -->
+        <div class="section" id="education-section">
+            <h2 class="section-title">Formation</h2>
+            <div class="education-item">
+                <div class="item-header">
+                    <div>
+                        <div class="item-title">{{education.degree}}</div>
+                        <div class="item-company" id="education-field">{{education.field}}</div>
+                        <div class="item-company">{{education.institution}}</div>
+                        <div class="item-location" id="education-location">{{education.location}}</div>
+                    </div>
+                    <div class="item-date" id="education-dateRange">{{education.dateRange}}</div>
+                </div>
+                <div class="item-description" id="education-description">{{education.description}}</div>
+                <div class="item-description" id="education-gpa">{{education.gpa}}</div>
+            </div>
+        </div>
+        <!-- END education -->
+
+        <!-- Compétences -->
+        <!-- START skills -->
+        <div class="section" id="skills-section">
+            <h2 class="section-title">Compétences</h2>
+            <div class="skills-list">
+                <div class="skill-item">{{skills.name}} <span id="skills-level">{{skills.level}}</span></div>
+            </div>
+        </div>
+        <!-- END skills -->
+
+        <!-- Langues -->
+        <!-- START languages -->
+        <div class="section" id="languages-section">
+            <h2 class="section-title">Langues</h2>
+            <div class="languages-list">
+                <div class="language-item">{{languages.name}} <span id="languages-level">{{languages.level}}</span></div>
+            </div>
+        </div>
+        <!-- END languages -->
+
+        <!-- Certifications -->
+        <!-- START certifications -->
+        <div class="section" id="certifications-section">
+            <h2 class="section-title">Certifications</h2>
+            <div class="certifications-list">
+                <div class="certification-item">
+                    <div class="cert-name">{{certifications.name}}</div>
+                    <div class="cert-issuer" id="certifications-issuer">{{certifications.issuer}}</div>
+                    <div class="cert-issuer" id="certifications-date">{{certifications.date}}</div>
+                </div>
+            </div>
+        </div>
+        <!-- END certifications -->
+
+        <!-- Projets -->
+        <!-- START projects -->
+        <div class="section" id="projects-section">
+            <h2 class="section-title">Projets</h2>
+            <div class="projects-list">
+                <div class="project-item">
+                    <div class="project-name">{{projects.name}}</div>
+                    <div class="project-description" id="projects-description">{{projects.description}}</div>
+                    <div class="project-tech" id="projects-technologies">{{projects.technologies}}</div>
+                </div>
+            </div>
+        </div>
+        <!-- END projects -->
+
+        <!-- Hobbies -->
+        <div class="section" id="hobbies-section">
+            <h2 class="section-title">Centres d'intérêt</h2>
+            <p class="hobbies">{{hobbies}}</p>
+        </div>
+
+        <!-- Références -->
+        <!-- START references -->
+        <div class="section" id="references-section">
+            <h2 class="section-title">Références</h2>
+            <div class="references-list">
+                <div class="reference-item">
+                    <div class="ref-name">{{references.name}}</div>
+                    <div class="ref-position" id="references-position">{{references.position}}</div>
+                    <div class="ref-position" id="references-email">{{references.email}}</div>
+                </div>
+            </div>
+        </div>
+        <!-- END references -->
+    </div>
+</body>
+</html>

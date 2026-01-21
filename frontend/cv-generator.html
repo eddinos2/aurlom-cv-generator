@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de CV</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 10px;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 38% 62%;
+            gap: 15px;
+            height: calc(100vh - 20px);
+        }
+
+        .panel {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel.form-panel {
+            min-width: 0;
+        }
+
+        .panel.preview-panel {
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+        }
+
+        .panel h2 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 8px;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        textarea {
+            min-height: 200px;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+            flex: 1;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .form-group:not(:last-child) {
+            flex: 0 0 auto;
+        }
+
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        button.secondary {
+            background: #95a5a6;
+        }
+
+        button.secondary:hover {
+            background: #7f8c8d;
+        }
+
+        button.success {
+            background: #27ae60;
+        }
+
+        button.success:hover {
+            background: #229954;
+        }
+
+        .preview-container {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+            background: white;
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preview-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+        }
+
+        .form-panel .form-group:has(textarea) {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .alert.error {
+            background: #fee;
+            border: 1px solid #fcc;
+            color: #c33;
+        }
+
+        .alert.success {
+            background: #efe;
+            border: 1px solid #cfc;
+            color: #3c3;
+        }
+
+        .alert.info {
+            background: #eef;
+            border: 1px solid #ccf;
+            color: #33c;
+        }
+
+        .json-editor {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .load-demo-btn {
+            background: #9b59b6;
+        }
+
+        .load-demo-btn:hover {
+            background: #8e44ad;
+        }
+
+        .template-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .template-option {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .template-option:hover {
+            border-color: #3498db;
+        }
+
+        .template-option.selected {
+            border-color: #3498db;
+            background: #ebf5fb;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        @media (max-width: 1200px) {
+            .container {
+                grid-template-columns: 42% 58%;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            body {
+                padding: 10px;
+                overflow: auto;
+            }
+
+            .container {
+                grid-template-columns: 1fr;
+                height: auto;
+                gap: 15px;
+            }
+
+            .panel {
+                min-height: 50vh;
+            }
+
+            .preview-container {
+                min-height: 70vh;
+            }
+
+            .preview-iframe {
+                min-height: 70vh;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 5px;
+            }
+
+            .container {
+                gap: 10px;
+            }
+
+            .panel {
+                padding: 10px;
+            }
+
+            .panel h2 {
+                font-size: 16px;
+                margin-bottom: 10px;
+            }
+
+            button {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+
+            .template-selector {
+                flex-direction: column;
+            }
+
+            .template-option {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Panel de gauche : Formulaire -->
+        <div class="panel form-panel">
+            <h2>📝 Configuration du CV</h2>
+            
+            <div id="alert-container"></div>
+
+            <div class="form-group">
+                <label>Template</label>
+                <div class="template-selector" id="template-selector">
+                    <div class="template-option selected" data-template="montemplate-v2">
+                        <strong>Mon Template V2</strong><br>
+                        <small>Template Aurlom BTS+</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Données JSON du CV</label>
+                <textarea id="json-input" class="json-editor" placeholder='{"personalInfo": {...}, ...}'></textarea>
+            </div>
+
+            <div class="controls">
+                <button class="load-demo-btn" onclick="loadDemoData()">📋 Charger les données de démo</button>
+                <button onclick="validateJSON()">✓ Valider JSON</button>
+                <button class="success" onclick="previewCV()">👁️ Prévisualiser</button>
+                <button class="success" onclick="generatePDF()">📄 Générer PDF</button>
+            </div>
+
+            <div class="loading" id="loading">
+                ⏳ Génération en cours...
+            </div>
+        </div>
+
+        <!-- Panel de droite : Prévisualisation -->
+        <div class="panel preview-panel">
+            <h2>👁️ Prévisualisation</h2>
+            <div class="preview-container">
+                <iframe id="preview-iframe" class="preview-iframe" src="about:blank"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = window.location.origin.replace(/:\d+$/, ':3000') || 'http://localhost:3000';
+        let selectedTemplate = 'montemplate-v2';
+
+        // Gestion de la sélection de template
+        document.querySelectorAll('.template-option').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelectorAll('.template-option').forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+                selectedTemplate = option.dataset.template;
+            });
+        });
+
+        // Charger les données de démo
+        async function loadDemoData() {
+            try {
+                // Essayer depuis le serveur d'abord
+                const response = await fetch(`${API_BASE_URL}/data/demo-cv.json`);
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('json-input').value = JSON.stringify(data, null, 2);
+                    showAlert('Données de démo chargées avec succès!', 'success');
+                    return;
+                }
+                throw new Error('Fichier non trouvé sur le serveur');
+            } catch (error) {
+                // Charger les données de démo intégrées si le serveur n'est pas disponible
+                try {
+                    const demoData = {
+                        "personalInfo": {
+                            "firstName": "Marie",
+                            "lastName": "Dupont",
+                            "email": "marie.dupont@email.com",
+                            "phone": "+33 6 12 34 56 78",
+                            "address": "123 Rue de la République",
+                            "city": "Paris",
+                            "postalCode": "75001",
+                            "country": "France",
+                            "linkedin": "https://linkedin.com/in/marie-dupont",
+                            "website": "https://marie-dupont.dev",
+                            "image": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop"
+                        },
+                        "summary": "Développeuse Full Stack passionnée avec 5 ans d'expérience dans le développement web.",
+                        "experience": [
+                            {
+                                "company": "TechCorp Solutions",
+                                "position": "Développeuse Full Stack Senior",
+                                "location": "Paris, France",
+                                "startDate": "2021-03",
+                                "endDate": "2024-12",
+                                "current": false,
+                                "description": "Développement et maintenance d'applications web complexes.",
+                                "achievements": ["Réduction de 40% du temps de chargement", "Mise en place d'une architecture microservices"]
+                            }
+                        ],
+                        "education": [
+                            {
+                                "institution": "École Supérieure d'Informatique",
+                                "degree": "Master en Informatique",
+                                "field": "Ingénierie Logicielle",
+                                "location": "Paris, France",
+                                "startDate": "2016-09",
+                                "endDate": "2018-06",
+                                "current": false,
+                                "gpa": "16.5/20"
+                            }
+                        ],
+                        "skills": [
+                            {"name": "JavaScript", "level": "expert"},
+                            {"name": "React", "level": "expert"},
+                            {"name": "Node.js", "level": "advanced"}
+                        ],
+                        "languages": [
+                            {"name": "Français", "level": "native"},
+                            {"name": "Anglais", "level": "C1"}
+                        ]
+                    };
+                    document.getElementById('json-input').value = JSON.stringify(demoData, null, 2);
+                    showAlert('Données de démo chargées!', 'success');
+                } catch (e) {
+                    showAlert('Erreur lors du chargement des données de démo: ' + error.message, 'error');
+                }
+            }
+        }
+
+        // Valider le JSON
+        function validateJSON() {
+            const jsonText = document.getElementById('json-input').value.trim();
+            if (!jsonText) {
+                showAlert('Veuillez saisir des données JSON', 'error');
+                return;
+            }
+
+            try {
+                const data = JSON.parse(jsonText);
+                showAlert('✓ JSON valide!', 'success');
+                return data;
+            } catch (error) {
+                showAlert('Erreur JSON: ' + error.message, 'error');
+                return null;
+            }
+        }
+
+        // Prévisualiser le CV
+        async function previewCV() {
+            const jsonData = validateJSON();
+            if (!jsonData) return;
+
+            const loadingEl = document.getElementById('loading');
+            loadingEl.classList.add('active');
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/cv/preview`, {
+                    method: 'POST',
+                    headers: getHeaders(),
+                    body: JSON.stringify({
+                        cvData: jsonData,
+                        templateName: selectedTemplate
+                    })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.message || 'Erreur lors de la génération');
+                }
+
+                const html = await response.text();
+                const iframe = document.getElementById('preview-iframe');
+                iframe.srcdoc = html;
+                
+                showAlert('Prévisualisation générée avec succès!', 'success');
+            } catch (error) {
+                showAlert('Erreur: ' + error.message, 'error');
+                console.error(error);
+            } finally {
+                loadingEl.classList.remove('active');
+            }
+        }
+
+        // Générer le PDF
+        async function generatePDF() {
+            const jsonData = validateJSON();
+            if (!jsonData) return;
+
+            const loadingEl = document.getElementById('loading');
+            loadingEl.classList.add('active');
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/cv/generate`, {
+                    method: 'POST',
+                    headers: getHeaders(),
+                    body: JSON.stringify({
+                        cvData: jsonData,
+                        templateName: selectedTemplate,
+                        outputFormat: 'pdf'
+                    })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.message || 'Erreur lors de la génération');
+                }
+
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `cv-${jsonData.personalInfo.firstName}-${jsonData.personalInfo.lastName}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+
+                showAlert('PDF généré et téléchargé avec succès!', 'success');
+            } catch (error) {
+                showAlert('Erreur: ' + error.message, 'error');
+                console.error(error);
+            } finally {
+                loadingEl.classList.remove('active');
+            }
+        }
+
+        // Afficher une alerte
+        function showAlert(message, type = 'info') {
+            const container = document.getElementById('alert-container');
+            const alert = document.createElement('div');
+            alert.className = `alert ${type}`;
+            alert.textContent = message;
+            container.innerHTML = '';
+            container.appendChild(alert);
+
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+
+        // Récupérer le token d'authentification (peut être stocké dans localStorage ou cookie)
+        function getAuthToken() {
+            // Pour les tests, retourner null pour ne pas envoyer de token
+            // En production, récupérez-le depuis localStorage ou un cookie
+            return localStorage.getItem('authToken') || null;
+        }
+
+        // Fonction helper pour les requêtes avec ou sans auth
+        function getHeaders() {
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            const token = getAuthToken();
+            if (token) {
+                headers['Authorization'] = 'Bearer ' + token;
+            }
+            return headers;
+        }
+
+        // Charger les templates disponibles depuis l'API
+        async function loadTemplates() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/cv/templates`, {
+                    headers: getHeaders()
+                });
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.success && result.data && result.data.length > 0) {
+                        const selector = document.getElementById('template-selector');
+                        selector.innerHTML = ''; // Vider les templates existants
+                        
+                        const templateNames = {
+                            'modern': { name: 'Modern', desc: 'Design moderne' },
+                            'classic': { name: 'Classic', desc: 'Style classique' },
+                            'montemplate': { name: 'Mon Template', desc: 'Basé sur votre DOCX' }
+                        };
+                        
+                        result.data.forEach(templateName => {
+                            const info = templateNames[templateName] || { name: templateName, desc: 'Template personnalisé' };
+                            const option = document.createElement('div');
+                            option.className = 'template-option';
+                            if (templateName === selectedTemplate) {
+                                option.classList.add('selected');
+                            }
+                            option.dataset.template = templateName;
+                            option.innerHTML = `<strong>${info.name}</strong><br><small>${info.desc}</small>`;
+                            option.addEventListener('click', () => {
+                                document.querySelectorAll('.template-option').forEach(opt => opt.classList.remove('selected'));
+                                option.classList.add('selected');
+                                selectedTemplate = templateName;
+                            });
+                            selector.appendChild(option);
+                        });
+                        
+                        // Réinitialiser les event listeners
+                        document.querySelectorAll('.template-option').forEach(option => {
+                            option.addEventListener('click', () => {
+                                document.querySelectorAll('.template-option').forEach(opt => opt.classList.remove('selected'));
+                                option.classList.add('selected');
+                                selectedTemplate = option.dataset.template;
+                            });
+                        });
+                    }
+                }
+            } catch (error) {
+                console.log('Impossible de charger les templates depuis l\'API, utilisation des templates par défaut');
+            }
+        }
+
+        // Charger les données de démo au chargement de la page
+        window.addEventListener('load', () => {
+            showAlert('Bienvenue! Chargez les données de démo ou saisissez vos propres données JSON.', 'info');
+            loadTemplates(); // Charger les templates disponibles
+        });
+    </script>
+</body>
+</html>

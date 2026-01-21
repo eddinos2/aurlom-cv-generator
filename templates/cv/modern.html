@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV - {{personalInfo.firstName}} {{personalInfo.lastName}}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            line-height: 1.6;
+            background: #fff;
+        }
+
+        .container {
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #2c3e50;
+        }
+
+        .profile-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #2c3e50;
+            margin-right: 30px;
+        }
+
+        .header-info {
+            flex: 1;
+        }
+
+        .name {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-size: 12px;
+            color: #555;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .summary {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #555;
+            text-align: justify;
+        }
+
+        .experience-item,
+        .education-item {
+            margin-bottom: 20px;
+            padding-left: 15px;
+            border-left: 3px solid #3498db;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 5px;
+        }
+
+        .item-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .item-company {
+            font-size: 14px;
+            color: #555;
+            font-style: italic;
+        }
+
+        .item-date {
+            font-size: 12px;
+            color: #888;
+            white-space: nowrap;
+        }
+
+        .item-location {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .item-description {
+            font-size: 13px;
+            color: #555;
+            margin-top: 8px;
+            line-height: 1.6;
+        }
+
+        .item-achievements {
+            font-size: 13px;
+            color: #555;
+            margin-top: 8px;
+            padding-left: 15px;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .skill-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 0;
+        }
+
+        .skill-name {
+            font-size: 13px;
+            color: #333;
+        }
+
+        .skill-level {
+            font-size: 11px;
+            color: #888;
+            text-transform: capitalize;
+        }
+
+        .languages-list,
+        .certifications-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .language-item,
+        .certification-item {
+            padding: 8px 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+
+        .certification-item {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .cert-name {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .cert-issuer {
+            font-size: 11px;
+            color: #888;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .project-item {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border-left: 3px solid #3498db;
+        }
+
+        .project-name {
+            font-size: 15px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .project-description {
+            font-size: 12px;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .project-tech {
+            font-size: 11px;
+            color: #888;
+            font-style: italic;
+        }
+
+        .hobbies {
+            font-size: 13px;
+            color: #555;
+        }
+
+        .references-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .reference-item {
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .ref-name {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .ref-position {
+            font-size: 12px;
+            color: #888;
+        }
+
+        @media print {
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header avec photo -->
+        <div class="header">
+            <div id="profile-image-container"></div>
+            <div class="header-info">
+                <h1 class="name">{{personalInfo.firstName}} {{personalInfo.lastName}}</h1>
+                <div class="contact-info">
+                    <div id="email-item"></div>
+                    <div id="phone-item"></div>
+                    <div id="address-item"></div>
+                    <div id="linkedin-item"></div>
+                    <div id="website-item"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Résumé -->
+        <div class="section" id="summary-section">
+            <h2 class="section-title">Profil</h2>
+            <p class="summary">{{summary}}</p>
+        </div>
+
+        <!-- Expérience professionnelle -->
+        <!-- START experience -->
+        <div class="section" id="experience-section">
+            <h2 class="section-title">Expérience Professionnelle</h2>
+            <div class="experience-item">
+                <div class="item-header">
+                    <div>
+                        <div class="item-title">{{experience.position}}</div>
+                        <div class="item-company">{{experience.company}}</div>
+                        <div class="item-location" id="experience-location">{{experience.location}}</div>
+                    </div>
+                    <div class="item-date">{{experience.startDate}} - {{experience.endDate}}</div>
+                </div>
+                <div class="item-description" id="experience-description">{{experience.description}}</div>
+                <div class="item-achievements" id="experience-achievements">{{experience.achievements}}</div>
+            </div>
+        </div>
+        <!-- END experience -->
+
+        <!-- Éducation -->
+        <!-- START education -->
+        <div class="section" id="education-section">
+            <h2 class="section-title">Formation</h2>
+            <div class="education-item">
+                <div class="item-header">
+                    <div>
+                        <div class="item-title">{{education.degree}}</div>
+                        <div class="item-company" id="education-field">{{education.field}}</div>
+                        <div class="item-company">{{education.institution}}</div>
+                        <div class="item-location" id="education-location">{{education.location}}</div>
+                    </div>
+                    <div class="item-date" id="education-dateRange">{{education.dateRange}}</div>
+                </div>
+                <div class="item-description" id="education-description">{{education.description}}</div>
+                <div class="item-description" id="education-gpa">{{education.gpa}}</div>
+            </div>
+        </div>
+        <!-- END education -->
+
+        <!-- Compétences -->
+        <!-- START skills -->
+        <div class="section" id="skills-section">
+            <h2 class="section-title">Compétences</h2>
+            <div class="skills-grid">
+                <div class="skill-item">
+                    <span class="skill-name">{{skills.name}}</span>
+                    <span class="skill-level" id="skills-level">{{skills.level}}</span>
+                </div>
+            </div>
+        </div>
+        <!-- END skills -->
+
+        <!-- Langues -->
+        <!-- START languages -->
+        <div class="section" id="languages-section">
+            <h2 class="section-title">Langues</h2>
+            <div class="languages-list">
+                <div class="language-item">{{languages.name}} <span id="languages-level">{{languages.level}}</span></div>
+            </div>
+        </div>
+        <!-- END languages -->
+
+        <!-- Certifications -->
+        <!-- START certifications -->
+        <div class="section" id="certifications-section">
+            <h2 class="section-title">Certifications</h2>
+            <div class="certifications-list">
+                <div class="certification-item">
+                    <div class="cert-name">{{certifications.name}}</div>
+                    <div class="cert-issuer" id="certifications-issuer">{{certifications.issuer}}</div>
+                    <div class="cert-issuer" id="certifications-date">{{certifications.date}}</div>
+                </div>
+            </div>
+        </div>
+        <!-- END certifications -->
+
+        <!-- Projets -->
+        <!-- START projects -->
+        <div class="section" id="projects-section">
+            <h2 class="section-title">Projets</h2>
+            <div class="projects-grid">
+                <div class="project-item">
+                    <div class="project-name">{{projects.name}}</div>
+                    <div class="project-description" id="projects-description">{{projects.description}}</div>
+                    <div class="project-tech" id="projects-technologies">{{projects.technologies}}</div>
+                </div>
+            </div>
+        </div>
+        <!-- END projects -->
+
+        <!-- Hobbies -->
+        <div class="section" id="hobbies-section">
+            <h2 class="section-title">Centres d'intérêt</h2>
+            <p class="hobbies">{{hobbies}}</p>
+        </div>
+
+        <!-- Références -->
+        <!-- START references -->
+        <div class="section" id="references-section">
+            <h2 class="section-title">Références</h2>
+            <div class="references-list">
+                <div class="reference-item">
+                    <div class="ref-name">{{references.name}}</div>
+                    <div class="ref-position" id="references-position">{{references.position}}</div>
+                    <div class="ref-position" id="references-email">{{references.email}}</div>
+                </div>
+            </div>
+        </div>
+        <!-- END references -->
+    </div>
+</body>
+</html>

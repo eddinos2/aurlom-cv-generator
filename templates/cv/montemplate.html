@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV - {{personalInfo.fullName}}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Times New Roman', Arial, sans-serif;
+            color: #000;
+            line-height: 1.3;
+            background: #fff;
+            font-size: 9.5pt;
+        }
+
+        .container {
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 10mm;
+            background: #fff;
+        }
+
+        /* En-tête du CV avec photo */
+        .cv-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+        }
+
+        .cv-header-left {
+            flex: 1;
+        }
+
+        .cv-name {
+            font-size: 18pt;
+            font-weight: bold;
+            margin-bottom: 3px;
+            line-height: 1.1;
+            text-transform: uppercase;
+        }
+
+        .cv-name a {
+            color: #e91e63;
+            text-decoration: underline;
+            font-weight: normal;
+        }
+
+        .cv-birth-info {
+            font-size: 9pt;
+            margin-bottom: 3px;
+            color: #333;
+        }
+
+        .cv-address {
+            font-size: 9pt;
+            margin-bottom: 3px;
+            color: #333;
+        }
+
+        .cv-contact {
+            font-size: 9pt;
+            color: #333;
+        }
+
+        .cv-photo {
+            width: 55px;
+            height: 55px;
+            border-radius: 3px;
+            object-fit: cover;
+            margin-left: 12px;
+            border: 1px solid #ddd;
+        }
+
+        /* Tableau de résumé */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 8px;
+        }
+
+        .summary-table th {
+            padding: 6px;
+            text-align: left;
+            font-weight: normal;
+            border: 1px solid #ddd;
+            font-size: 9pt;
+            line-height: 1.4;
+        }
+
+        /* Sections */
+        .section-title {
+            font-size: 11pt;
+            font-weight: bold;
+            margin: 10px 0 6px 0;
+            padding: 4px 8px;
+            text-transform: uppercase;
+            color: #000;
+            background-color: #fffacd; /* Fond jaune clair comme dans l'image */
+            display: inline-block;
+            width: 100%;
+        }
+
+        /* Tableaux pour formation et expérience */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 8px;
+        }
+
+        .data-table th {
+            padding: 4px 6px;
+            text-align: left;
+            font-weight: normal;
+            border: 1px solid #ddd;
+            vertical-align: top;
+            font-size: 9pt;
+        }
+
+        .data-table th:first-child {
+            width: 18%;
+            font-style: italic;
+            color: #666;
+        }
+
+        .data-table th:last-child {
+            width: 82%;
+        }
+
+        .data-table p {
+            margin: 1px 0;
+            line-height: 1.3;
+        }
+
+        .data-table strong {
+            font-weight: bold;
+        }
+
+        .data-table em {
+            font-style: italic;
+            color: #666;
+        }
+
+        /* Compétences et langues - format inline */
+        .skills-section {
+            margin-bottom: 4px;
+            font-size: 9pt;
+        }
+
+        .skills-line {
+            margin-bottom: 2px;
+            line-height: 1.4;
+        }
+
+        .skills-line strong {
+            font-weight: bold;
+        }
+
+        .skills-line em {
+            font-style: italic;
+            color: #666;
+        }
+
+        /* Activités extra-scolaires */
+        .activities-section {
+            margin-top: 4px;
+        }
+
+        .activities-item {
+            font-size: 9pt;
+            margin-bottom: 2px;
+            line-height: 1.4;
+        }
+
+        .activities-item em {
+            font-style: italic;
+        }
+
+        /* Footer Aurlom */
+        .footer {
+            margin-top: 12px;
+            padding-top: 8px;
+            border-top: 1px solid #ddd;
+            font-size: 7.5pt;
+            color: #666;
+            text-align: center;
+        }
+
+        .footer-logo {
+            text-align: right;
+            margin-top: 3px;
+        }
+
+        /* Gestion des cas limites */
+        .long-text {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        @media print {
+            .container {
+                padding: 10mm;
+            }
+            @page {
+                margin: 10mm;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- En-tête du CV avec photo -->
+        <div class="cv-header">
+            <div class="cv-header-left">
+                <div class="cv-name">
+                    <strong>{{personalInfo.fullName}} • </strong>
+                    <a href="{{personalInfo.website}}" id="discover-link">Découvrez-moi en 30 sec.</a>
+                </div>
+                <div class="cv-birth-info" id="birth-info">
+                    Né le {{personalInfo.dateOfBirth}} <span id="birth-place"></span>
+                </div>
+                <div class="cv-address">{{personalInfo.fullAddress}}</div>
+                <div class="cv-contact">
+                    Tel. {{personalInfo.phone}} • Mail. {{personalInfo.email}} <span id="license-display"></span> <span id="vehicle-display"></span>
+                </div>
+            </div>
+            <div id="photo-container">
+                <img src="{{personalInfo.image}}" alt="Photo de profil" class="cv-photo" id="profile-photo">
+            </div>
+        </div>
+
+        <!-- Résumé / Profil -->
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>
+                        <p class="long-text">{{summary}}</p>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+
+        <!-- Formation académique -->
+        <p class="section-title">Formation académique</p>
+        <table class="data-table">
+            <thead>
+                <!-- START education -->
+                <tr>
+                    <th>
+                        <p><em>{{education.dateRange}}</em></p>
+                    </th>
+                    <th>
+                        <p><strong>{{education.degree}}</strong> • <strong>{{education.institution}}</strong> • <em>{{education.location}}</em></p>
+                        <p id="education-field">{{education.field}}</p>
+                        <p id="education-gpa">{{education.gpa}}</p>
+                    </th>
+                </tr>
+                <!-- END education -->
+            </thead>
+        </table>
+
+        <!-- Expériences -->
+        <p class="section-title">Expériences</p>
+        <table class="data-table">
+            <thead>
+                <!-- START experience -->
+                <tr>
+                    <th>
+                        <p><em>{{experience.startDate}}</em></p>
+                        <p id="experience-duration">{{experience.endDate}}</p>
+                    </th>
+                    <th>
+                        <p><strong>{{experience.company}}</strong> • {{experience.position}} • <em>{{experience.location}}</em></p>
+                        <p class="long-text">{{experience.description}}</p>
+                        <div id="experience-achievements">{{experience.achievements}}</div>
+                    </th>
+                </tr>
+                <!-- END experience -->
+            </thead>
+        </table>
+
+        <!-- Langues, logiciels, qualités et valeurs -->
+        <p class="section-title">Langues, logiciels, qualités et valeurs</p>
+        <div class="skills-section">
+            <!-- START languages -->
+            <div class="skills-line">
+                <strong>{{languages.name}}</strong> : {{languages.level}}
+            </div>
+            <!-- END languages -->
+            
+            <!-- START skills -->
+            <div class="skills-line">
+                <strong>{{skills.name}}</strong> : {{skills.level}}
+            </div>
+            <!-- END skills -->
+            
+            <div class="skills-line" id="qualities-values">
+                <em># Qualités et valeurs</em>
+            </div>
+        </div>
+
+        <!-- Compétences -->
+        <div class="skills-section" id="competences-section">
+            <div class="skills-line">
+                <strong>Compétences</strong> : <span id="competences-list"></span>
+                <em id="competences-values"># Valeurs</em>
+            </div>
+        </div>
+
+        <!-- Activités extra-scolaires -->
+        <p class="section-title">Activités extra-scolaires</p>
+        <div class="activities-section" id="hobbies-section">
+            <div class="activities-item">
+                <em id="hobbies-list">{{hobbies}}</em>
+            </div>
+        </div>
+
+        <!-- Certifications (si présentes) -->
+        <!-- START certifications -->
+        <p class="section-title" id="certifications-title">Certifications</p>
+        <div class="skills-section">
+            <div class="skills-line">
+                <strong>{{certifications.name}}</strong> - {{certifications.issuer}} ({{certifications.date}})
+            </div>
+        </div>
+        <!-- END certifications -->
+
+        <!-- Projets (si présents) -->
+        <!-- START projects -->
+        <p class="section-title" id="projects-title">Projets</p>
+        <div class="skills-section">
+            <div class="skills-line">
+                <strong>{{projects.name}}</strong> - {{projects.description}}
+            </div>
+            <div class="skills-line">
+                Technologies : {{projects.technologies}}
+            </div>
+        </div>
+        <!-- END projects -->
+
+        <!-- Footer Aurlom -->
+        <div class="footer">
+            <p>Aurlom BTS+ est le premier BTS de France. Plus de 3 000 étudiants préparés sur 32 filières de BTS à Paris, Boulogne, Nice et Lille. Plus de 1 800 entreprises partenaires.</p>
+            <p>Contact : 01 40 41 12 38 • info@aurlom.com • Siège : 167 rue de Courcelles 75017 Paris.</p>
+            <div class="footer-logo">
+                <strong>aurlom</strong><br>
+                <small>LE CHOIX DU SUCCÈS</small>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
