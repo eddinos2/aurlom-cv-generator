@@ -1,15 +1,19 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "server-cv-only.js",
-      "use": "@vercel/node"
-    }
-  ],
+  "buildCommand": "npm install",
+  "outputDirectory": "frontend",
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "server-cv-only.js"
+      "src": "/api/cv/pdf",
+      "dest": "/api/cv-pdf.js"
+    },
+    {
+      "src": "/api/cv/preview",
+      "dest": "/api/cv-preview.js"
+    },
+    {
+      "src": "/api/cv/templates",
+      "dest": "/api/cv-templates.js"
     },
     {
       "src": "/data/(.*)",
@@ -31,14 +35,5 @@
       "src": "/(.*)",
       "dest": "/frontend/$1"
     }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  },
-  "functions": {
-    "server-cv-only.js": {
-      "maxDuration": 60,
-      "memory": 3008
-    }
-  }
+  ]
 }

@@ -34,11 +34,14 @@ vercel --prod
 
 Le fichier `vercel.json` configure :
 
-- **API Routes** : Toutes les routes `/api/*` sont dirigées vers `server-cv-only.js`
+- **API Routes** : Routes spécifiques vers les fonctions serverless dans `/api/`
+  - `/api/cv/pdf` → `api/cv-pdf.js`
+  - `/api/cv/preview` → `api/cv-preview.js`
+  - `/api/cv/templates` → `api/cv-templates.js`
 - **Fichiers statiques** : `/data/*` et `/templates/*` sont servis directement
 - **Frontend** : `/cv-generator` et `/` pointent vers l'interface
-- **Timeout** : 60 secondes (suffisant pour Puppeteer)
-- **Mémoire** : 3008 MB (maximum Vercel)
+- **Build** : `npm install` pour installer les dépendances
+- **Output** : `frontend` comme répertoire de publication
 
 ## 🔧 Variables d'Environnement
 
